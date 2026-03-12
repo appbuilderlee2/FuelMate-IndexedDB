@@ -1748,7 +1748,12 @@ END:VCALENDAR`;
                 const tireStatuses = utils.getTireReplacementStatus(vehicle);
                 const hasUnsetTires = tireStatuses.some(s => s.isNotSet);
                 const reminderData = this.getReminderData(vehicle);
-                const activeReminders = reminderData.activeItems;
+                const activeReminders = reminderData.activeItems.slice().sort((a, b) => {
+                    const aTime = a.dueDateIso ? new Date(a.dueDateIso).getTime() : Number.POSITIVE_INFINITY;
+                    const bTime = b.dueDateIso ? new Date(b.dueDateIso).getTime() : Number.POSITIVE_INFINITY;
+                    if (aTime !== bTime) return aTime - bTime;
+                    return (a.title || '').localeCompare(b.title || '');
+                });
                 const doneReminders = reminderData.doneItems;
                 const reminderSummary = { tire: 0, service: 0, docs: 0, backup: 0 };
                 activeReminders.forEach(it => {
