@@ -3607,6 +3607,17 @@ END:VCALENDAR`;
                                         <span>${utils.t('tire_balancing')}</span>
                                     </label>
                                 </div>
+                                <div class="grid grid-cols-2 gap-3 mt-3">
+                                    <div>
+                                        <label class="text-xs theme-text-sub block mb-1">${utils.t('remaining_distance')}</label>
+                                        <input id="l_tire_remaining_dist" type="number" min="0" step="1" value="${Number.isFinite(parseFloat(log.tireRemainingDist)) ? log.tireRemainingDist : ''}" class="w-full p-3 rounded-xl text-sm" placeholder="${utils.getDistUnit()}">
+                                        <div class="text-[10px] theme-text-sub mt-1">${utils.getDistUnit()}</div>
+                                    </div>
+                                    <div>
+                                        <label class="text-xs theme-text-sub block mb-1">${utils.t('remaining_months')}</label>
+                                        <input id="l_tire_remaining_months" type="number" min="0" step="1" value="${Number.isFinite(parseFloat(log.tireRemainingDays)) ? Math.round(parseFloat(log.tireRemainingDays) / 30) : ''}" class="w-full p-3 rounded-xl text-sm" placeholder="e.g. 24">
+                                    </div>
+                                </div>
                             </div>
                             <div id="tire_rotation_fields" class="${log.type === 'tire_rotation' ? '' : 'hidden'} bg-slate-50 dark:bg-slate-800/40 p-3 rounded-xl border theme-border mb-3">
                                 <div class="flex items-center justify-between mb-2">
@@ -3821,6 +3832,8 @@ END:VCALENDAR`;
                     tireAlignment: isTireReplace ? !!document.getElementById('l_tire_alignment')?.checked : undefined,
                     tireBalancing: isTireReplace ? !!document.getElementById('l_tire_balancing')?.checked : undefined,
                     tireId: isTireReplace ? (existing?.tireId || utils.newId()) : undefined,
+                    tireRemainingDist: isTireReplace ? (Number.isFinite(parseFloat(document.getElementById('l_tire_remaining_dist')?.value)) ? Math.max(0, parseFloat(document.getElementById('l_tire_remaining_dist').value)) : null) : undefined,
+                    tireRemainingDays: isTireReplace ? (Number.isFinite(parseFloat(document.getElementById('l_tire_remaining_months')?.value)) ? Math.max(0, Math.round(parseFloat(document.getElementById('l_tire_remaining_months').value) * 30)) : null) : undefined,
                     tireSwaps: isTireRotation ? tireSwaps : undefined,
                     tireSwapA: isTireRotation ? tireSwapA : undefined,
                     tireSwapB: isTireRotation ? tireSwapB : undefined
