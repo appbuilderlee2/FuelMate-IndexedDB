@@ -2,10 +2,12 @@ name: Deploy FuelMate to GitHub Pages
 
 permissions:
   contents: write
-  pages: write
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -24,12 +26,26 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Install browser for E2E
+        timeout-minutes: 10
+        run: npx playwright install chromium
+
+      - name: Browser E2E
+        run: npm run test:e2e
+
+      - name: Type check
+        run: npm run typecheck
 
       - name: Build
         run: npm run build
 
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
